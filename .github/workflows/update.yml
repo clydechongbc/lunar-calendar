@@ -1,8 +1,6 @@
 name: Generate Lunar Calendar
 
 on:
-  schedule:
-    - cron: "0 0 1 1 *"   # every year Jan 1
   workflow_dispatch:
 
 jobs:
@@ -10,33 +8,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 2. Setup Node
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 3. Install dependencies
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
 
-      # 4. Generate calendar.ics
-      - name: Generate ICS
-        run: node index.js
+      - run: node index.js
 
-      # 5. Debug (IMPORTANT - shows file exists)
-      - name: List files
-        run: ls -lah
+      - run: ls -lah   # 🔍 检查是否生成 calendar.ics
 
-      # 6. Commit generated file
-      - name: Commit ICS file
-        run: |
+      - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add calendar.ics
-          git commit -m "update calendar" || echo "no changes"
+          git commit -m "add calendar" || echo "no changes"
           git push
